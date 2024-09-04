@@ -1,16 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
+  console.log('DOM fully loaded');  // <-- Add this to ensure DOM is ready
+
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
   
-  // Check if the consent has already been given
   const consent = getCookie(cookieName);
   if (!consent) {
+    console.log('No consent found, showing cookie banner');  // <-- Add this to check if banner should show
     showCookieBanner();
   } else {
+    console.log('Consent already given:', consent);  // <-- Add this to check the consent state
     applyConsent(consent);
   }
 
   function showCookieBanner() {
+    console.log('Displaying cookie banner');  // <-- Add this to ensure the function is triggered
     const banner = document.createElement('div');
     banner.setAttribute('id', 'cookie-banner');
     banner.innerHTML = `
@@ -22,18 +26,25 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       </div>
     `;
-    document.body.appendChild(banner); // Append the banner to the body element
+    document.body.appendChild(banner);
+    console.log('Banner added to DOM');  // <-- Log when the banner is added to the page
 
     document.getElementById('accept-all-cookies').addEventListener('click', function() {
+      console.log('Accept all clicked');  // <-- Log button click
       setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
       applyConsent({ necessary: true, analytics: true, marketing: true });
       removeBanner();
     });
 
     document.getElementById('customize-cookies').addEventListener('click', function() {
+      console.log('Customize clicked');  // <-- Log customize click
       showCustomizeModal();
     });
   }
+
+  // (The rest of the code remains the same)
+});
+
 
   function showCustomizeModal() {
     const modal = document.createElement('div');
