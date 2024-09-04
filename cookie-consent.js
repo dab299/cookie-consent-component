@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM fully loaded');  // Log when the DOM is fully loaded
+  console.log('DOM fully loaded');
 
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
@@ -7,46 +7,69 @@ document.addEventListener('DOMContentLoaded', function () {
   const consent = getCookie(cookieName);
   if (!consent) {
     console.log('No consent found, showing cookie banner');
-    alert('Cookie banner should appear now');  // Show an alert for debugging
     showCookieBanner();
   } else {
     console.log('Consent already given:', consent);
     applyConsent(consent);
   }
 
-function showCookieBanner() {
-  console.log('Displaying cookie banner');
-  const banner = document.createElement('div');
-  banner.setAttribute('id', 'cookie-banner');
-  banner.innerHTML = `
-    <div class="cookie-banner-container">
-      <p>We use cookies to improve your experience. By continuing to browse, you agree to our use of cookies.</p>
-      <div class="cookie-controls">
-        <button id="accept-all-cookies">Accept All</button>
-        <button id="customize-cookies">Customize</button>
+  function showCookieBanner() {
+    console.log('Displaying cookie banner');
+    const banner = document.createElement('div');
+    banner.setAttribute('id', 'cookie-banner');
+    banner.innerHTML = `
+      <div class="cookie-banner-container">
+        <p>We use cookies to improve your experience. By continuing to browse, you agree to our use of cookies.</p>
+        <div class="cookie-controls">
+          <button id="accept-all-cookies">Accept All</button>
+          <button id="customize-cookies">Customize</button>
+        </div>
       </div>
-    </div>
-  `;
-
-  if (document.body) {
+    `;
     document.body.appendChild(banner);
-    console.log('Banner added to body');
-  } else {
-    console.log('Banner not added, body is null');
-  }
-}
+    console.log('Banner added to DOM');
 
     document.getElementById('accept-all-cookies').addEventListener('click', function() {
       console.log('Accept all clicked');
       setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
       applyConsent({ necessary: true, analytics: true, marketing: true });
-      removeBanner();
+      removeBanner();  // Ensure this function is closed properly
     });
 
     document.getElementById('customize-cookies').addEventListener('click', function() {
       console.log('Customize clicked');
-      showCustomizeModal();
+      showCustomizeModal();  // Ensure this function is closed properly
     });
+  }
+
+  function applyConsent(consent) {
+    if (consent.analytics) {
+      console.log('Analytics enabled');
+    }
+    if (consent.marketing) {
+      console.log('Marketing enabled');
+    }
+  }
+
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  }
+
+  function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return JSON.parse(decodeURIComponent(cookieValue));
+      }
+    }
+    return null;
+  }
+
+  function removeBanner() {
+    const banner = document.getElementById('cookie-banner');
+    if (banner) banner.remove();
   }
 
   function showCustomizeModal() {
@@ -77,38 +100,6 @@ function showCookieBanner() {
       removeModal();
       removeBanner();
     });
-  }
-
-  function applyConsent(consent) {
-    if (consent.analytics) {
-      console.log('Analytics enabled');
-      // Add analytics scripts here
-    }
-    if (consent.marketing) {
-      console.log('Marketing enabled');
-      // Add marketing scripts here
-    }
-  }
-
-  function setCookie(name, value, days) {
-    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
-    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-  }
-
-  function getCookie(name) {
-    const cookies = document.cookie.split('; ');
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
-      if (cookieName === name) {
-        return JSON.parse(decodeURIComponent(cookieValue));
-      }
-    }
-    return null;
-  }
-
-  function removeBanner() {
-    const banner = document.getElementById('cookie-banner');
-    if (banner) banner.remove();
   }
 
   function removeModal() {
