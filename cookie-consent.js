@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM fully loaded');  // For debugging
-  
+  console.log('DOM fully loaded');
+
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
 
@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const customizeButton = document.querySelector('[data-cookie-customize="true"]');
   const modal = document.querySelector('[data-cookie-modal="true"]');
   const form = document.querySelector('[data-cookie-form="true"]');
-  const modalContent = document.querySelector('[data-cookie-modal-content="true"]');
-  
+
+  // Preserve the original display style of the banner
+  let originalBannerDisplay = getComputedStyle(banner).display;
+
   const consent = getCookie(cookieName);
   if (!consent) {
     console.log('No consent found, showing cookie banner');
@@ -21,15 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
     applyConsent(consent);
   }
 
-  // Show cookie banner
+  // Show cookie banner, restore the original display value
   function showCookieBanner() {
     if (banner) {
-      banner.style.display = 'block';  // Display banner
-      console.log('Banner displayed');
+      banner.style.display = originalBannerDisplay;  // Restore original display style (e.g., 'flex')
+      console.log('Banner displayed with original display: ' + originalBannerDisplay);
     }
   }
 
-  // Hide cookie banner
+  // Hide cookie banner, keep the style as 'none'
   function hideCookieBanner() {
     if (banner) {
       banner.style.display = 'none';  // Hide banner
