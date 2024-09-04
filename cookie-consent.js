@@ -11,8 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const modal = document.querySelector('[data-cookie-modal="true"]');
   const form = document.querySelector('[data-cookie-form="true"]');
 
-  // Preserve the original display style of the banner
+  // Preserve the original display style of the banner and modal
   let originalBannerDisplay = getComputedStyle(banner).display;
+  let originalModalDisplay = getComputedStyle(modal).display;
 
   const consent = getCookie(cookieName);
   if (!consent) {
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Hide cookie banner, keep the style as 'none'
+  // Hide cookie banner, set display to 'none'
   function hideCookieBanner() {
     if (banner) {
       banner.style.display = 'none';  // Hide banner
@@ -39,15 +40,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Show the modal for customizing preferences
+  // Show the modal for customizing preferences, restore original display value
   function showCookieModal() {
     if (modal) {
-      modal.style.display = 'block';  // Display modal
-      console.log('Modal displayed');
+      modal.style.display = originalModalDisplay;  // Restore original display style (e.g., 'flex' or 'block')
+      console.log('Modal displayed with original display: ' + originalModalDisplay);
     }
   }
 
-  // Hide the modal
+  // Hide the modal, set display to 'none'
   function hideCookieModal() {
     if (modal) {
       modal.style.display = 'none';  // Hide modal
