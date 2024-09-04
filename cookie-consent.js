@@ -1,80 +1,122 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM fully loaded');
+  console.log('DOM fully loaded');  // For debugging
+  
+  const cookieName = 'cookieConsentStatus';
+  const cookieCategories = ['necessary', 'analytics', 'marketing'];
 
-    const cookieName = 'cookieConsentStatus';
-    const cookieCategories = ['necessary', 'analytics', 'marketing'];
+  // Get elements based on custom attributes
+  const banner = document.querySelector('[data-cookie-banner="true"]');
+  const acceptAllButton = document.querySelector('[data-cookie-accept="true"]');
+  const customizeButton = document.querySelector('[data-cookie-customize="true"]');
+  const modal = document.querySelector('[data-cookie-modal="true"]');
+  const form = document.querySelector('[data-cookie-form="true"]');
+  const modalContent = document.querySelector('[data-cookie-modal-content="true"]');
+  
+  const consent = getCookie(cookieName);
+  if (!consent) {
+    console.log('No consent found, showing cookie banner');
+    showCookieBanner();
+  } else {
+    console.log('Consent already given:', consent);
+    applyConsent(consent);
+  }
 
-    const consent = getCookie(cookieName);
-    if (!consent) {
-        console.log('No consent found, showing cookie banner');
-        showCookieBanner();
-    } else {
-        console.log('Consent already given:', consent);
-        applyConsent(consent);
+  // Show cookie banner
+  function showCookieBanner() {
+    if (banner) {
+      banner.style.display = 'block';  // Display banner
+      console.log('Banner displayed');
     }
+  }
 
-    function showCookieBanner() {
-        console.log('Displaying cookie banner');
-
-        const banner = document.querySelector('[data-cookie-banner="true"]');
-        const acceptButton = document.querySelector('[data-cookie-accept="true"]');
-        const customizeButton = document.querySelector('[data-cookie-customize="true"]');
-
-        // Show the banner
-        banner.style.display = 'block';
-
-        // Handle Accept All button
-        acceptButton.addEventListener('click', function () {
-            console.log('Accept all clicked');
-            setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
-            applyConsent({ necessary: true, analytics: true, marketing: true });
-            banner.style.display = 'none'; // Hide banner after accepting
-        });
-
-        // Handle Customize button
-        customizeButton.addEventListener('click', function () {
-            console.log('Customize clicked');
-            showCustomizeModal();
-        });
+  // Hide cookie banner
+  function hideCookieBanner() {
+    if (banner) {
+      banner.style.display = 'none';  // Hide banner
+      console.log('Banner hidden');
     }
+  }
 
-    function showCustomizeModal() {
-        const modal = document.querySelector('[data-cookie-modal="true"]');
-        const form = document.querySelector('[data-cookie-form="true"]');
-
-        // Show the modal
-        modal.style.display = 'block';
-
-        // Handle form submission
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const consent = {};
-            cookieCategories.forEach(category => {
-                consent[category] = formData.get(category) === 'on';
-            });
-            setCookie(cookieName, JSON.stringify(consent), 365);
-            applyConsent(consent);
-            modal.style.display = 'none'; // Hide modal after saving preferences
-            document.querySelector('[data-cookie-banner="true"]').style.display = 'none'; // Hide banner too
-        });
+  // Show the modal for customizing preferences
+  function showCookieModal() {
+    if (modal) {
+      modal.style.display = 'block';  // Display modal
+      console.log('Modal displayed');
     }
+  }
 
-    function applyConsent(consent) {
-        if (consent.analytics) {
-            console.log('Analytics enabled');
-        }
-        if (consent.marketing) {
-            console.log('Marketing enabled');
-        }
+  // Hide the modal
+  function hideCookieModal() {
+    if (modal) {
+      modal.style.display = 'none';  // Hide modal
+      console.log('Modal hidden');
     }
+  }
 
-    function setCookie(name, value, days) {
-        const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  // Event listener for the "Accept All" button
+  if (acceptAllButton) {
+    acceptAllButton.addEventListener('click', function() {
+      console.log('Accept all clicked');
+      setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
+      applyConsent({ necessary: true, analytics: true, marketing: true });
+      hideCookieBanner();
+    });
+  }
+
+  // Event listener for the "Customize" button
+  if (customizeButton) {
+    customizeButton.addEventListener('click', function() {
+      console.log('Customize clicked');
+      showCookieModal();  // Show the modal for customization
+    });
+  }
+
+  // Event listener for the form submission in the modal
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const consent = {};
+      
+      // Map checkboxes to consent categories
+      cookieCategories.forEach(category => {
+        consent[category] = formData.get(category) === 'on';
+      });
+      
+      setCookie(cookieName, JSON.stringify(consent), 365);
+      applyConsent(consent);
+      hideCookieModal();
+      hideCookieBanner();
+    });
+  }
+
+  // Apply the cookie consent (e.g., load scripts for analytics/marketing if consented)
+  function applyConsent(consent) {
+    if (consent.analytics) {
+      console.log('Analytics enabled');
+      // Initialize analytics scripts here
     }
+    if (consent.marketing) {
+      console.log('Marketing enabled');
+      // Initialize marketing scripts here
+    }
+  }
 
-    function getCookie(name) {
-        const cookies = document.cookie.split('; ');
-        for (const cookie of cookies) {
-            const
+  // Utility to set a cookie
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  }
+
+  // Utility to get a cookie by name
+  function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return JSON.parse(decodeURIComponent(cookieValue));
+      }
+    }
+    return null;
+  }
+});
