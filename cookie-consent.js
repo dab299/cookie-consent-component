@@ -1,4 +1,4 @@
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
   
@@ -22,7 +22,7 @@
         </div>
       </div>
     `;
-    document.body.appendChild(banner);
+    document.body.appendChild(banner); // Append the banner to the body element
 
     document.getElementById('accept-all-cookies').addEventListener('click', function() {
       setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
@@ -101,4 +101,4 @@
     const modal = document.getElementById('cookie-modal');
     if (modal) modal.remove();
   }
-})();
+});
