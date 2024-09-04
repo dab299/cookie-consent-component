@@ -1,20 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM fully loaded');  // <-- Add this to ensure DOM is ready
+  console.log('DOM fully loaded');  // Ensure DOM is ready
 
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
   
+  // Check if the consent has already been given
   const consent = getCookie(cookieName);
   if (!consent) {
-    console.log('No consent found, showing cookie banner');  // <-- Add this to check if banner should show
+    console.log('No consent found, showing cookie banner');
     showCookieBanner();
   } else {
-    console.log('Consent already given:', consent);  // <-- Add this to check the consent state
+    console.log('Consent already given:', consent);
     applyConsent(consent);
   }
 
   function showCookieBanner() {
-    console.log('Displaying cookie banner');  // <-- Add this to ensure the function is triggered
+    console.log('Displaying cookie banner');
     const banner = document.createElement('div');
     banner.setAttribute('id', 'cookie-banner');
     banner.innerHTML = `
@@ -27,24 +28,20 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     `;
     document.body.appendChild(banner);
-    console.log('Banner added to DOM');  // <-- Log when the banner is added to the page
+    console.log('Banner added to DOM');
 
     document.getElementById('accept-all-cookies').addEventListener('click', function() {
-      console.log('Accept all clicked');  // <-- Log button click
+      console.log('Accept all clicked');
       setCookie(cookieName, JSON.stringify({ necessary: true, analytics: true, marketing: true }), 365);
       applyConsent({ necessary: true, analytics: true, marketing: true });
       removeBanner();
     });
 
     document.getElementById('customize-cookies').addEventListener('click', function() {
-      console.log('Customize clicked');  // <-- Log customize click
+      console.log('Customize clicked');
       showCustomizeModal();
     });
   }
-
-  // (The rest of the code remains the same)
-});
-
 
   function showCustomizeModal() {
     const modal = document.createElement('div');
@@ -78,12 +75,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function applyConsent(consent) {
     if (consent.analytics) {
-      // Initialize analytics scripts
       console.log('Analytics enabled');
+      // Place any code to initialize analytics scripts here
     }
     if (consent.marketing) {
-      // Initialize marketing scripts
       console.log('Marketing enabled');
+      // Place any code to initialize marketing scripts here
     }
   }
 
