@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM fully loaded');  // Ensure DOM is ready
+  console.log('DOM fully loaded');  // Log when the DOM is fully loaded
 
   const cookieName = 'cookieConsentStatus';
   const cookieCategories = ['necessary', 'analytics', 'marketing'];
-  
-  // Check if the consent has already been given
+
   const consent = getCookie(cookieName);
   if (!consent) {
     console.log('No consent found, showing cookie banner');
+    alert('Cookie banner should appear now');  // Show an alert for debugging
     showCookieBanner();
   } else {
     console.log('Consent already given:', consent);
@@ -76,11 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function applyConsent(consent) {
     if (consent.analytics) {
       console.log('Analytics enabled');
-      // Place any code to initialize analytics scripts here
+      // Add analytics scripts here
     }
     if (consent.marketing) {
       console.log('Marketing enabled');
-      // Place any code to initialize marketing scripts here
+      // Add marketing scripts here
     }
   }
 
