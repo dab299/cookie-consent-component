@@ -14,21 +14,27 @@ document.addEventListener('DOMContentLoaded', function () {
     applyConsent(consent);
   }
 
-  function showCookieBanner() {
-    console.log('Displaying cookie banner');
-    const banner = document.createElement('div');
-    banner.setAttribute('id', 'cookie-banner');
-    banner.innerHTML = `
-      <div class="cookie-banner-container">
-        <p>We use cookies to improve your experience. By continuing to browse, you agree to our use of cookies.</p>
-        <div class="cookie-controls">
-          <button id="accept-all-cookies">Accept All</button>
-          <button id="customize-cookies">Customize</button>
-        </div>
+function showCookieBanner() {
+  console.log('Displaying cookie banner');
+  const banner = document.createElement('div');
+  banner.setAttribute('id', 'cookie-banner');
+  banner.innerHTML = `
+    <div class="cookie-banner-container">
+      <p>We use cookies to improve your experience. By continuing to browse, you agree to our use of cookies.</p>
+      <div class="cookie-controls">
+        <button id="accept-all-cookies">Accept All</button>
+        <button id="customize-cookies">Customize</button>
       </div>
-    `;
+    </div>
+  `;
+
+  if (document.body) {
     document.body.appendChild(banner);
-    console.log('Banner added to DOM');
+    console.log('Banner added to body');
+  } else {
+    console.log('Banner not added, body is null');
+  }
+}
 
     document.getElementById('accept-all-cookies').addEventListener('click', function() {
       console.log('Accept all clicked');
